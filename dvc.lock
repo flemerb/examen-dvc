@@ -1,0 +1,97 @@
+schema: '2.0'
+stages:
+  preprocessing:
+    cmd: python src/data/preprocessing.py
+    deps:
+    - path: data/raw_data
+      hash: md5
+      md5: 83524b9ab09f4ac15af2c899d45e60eb.dir
+      size: 333773
+      nfiles: 2
+    - path: src/data/preprocessing.py
+      hash: md5
+      md5: bff4f7247533e513fe51dd150eb4e1d2
+      size: 863
+    outs:
+    - path: data/processed_data
+      hash: md5
+      md5: 6251b89bce784cdb9ca16798111f123b.dir
+      size: 346803
+      nfiles: 4
+  normalization:
+    cmd: python src/data/normalization.py
+    deps:
+    - path: data/processed_data
+      hash: md5
+      md5: 6251b89bce784cdb9ca16798111f123b.dir
+      size: 346803
+      nfiles: 4
+    - path: src/data/normalization.py
+      hash: md5
+      md5: dde5ae8ae28e1ae5d2ad9f3bc772efff
+      size: 941
+    outs:
+    - path: data/normalized_data
+      hash: md5
+      md5: 524cac3c10d1c7f6d059cf50cc0f3167.dir
+      size: 320846
+      nfiles: 2
+  grid_search:
+    cmd: python src/models/grid_search.py
+    deps:
+    - path: data/processed_data
+      hash: md5
+      md5: 6251b89bce784cdb9ca16798111f123b.dir
+      size: 346803
+      nfiles: 4
+    - path: src/models/grid_search.py
+      hash: md5
+      md5: f26ce3d13abfd02f4f93989fc61c64b4
+      size: 766
+    outs:
+    - path: models/best_params.pkl
+      hash: md5
+      md5: 896de5b2b4454e8b3b84ec9ea75b1ede
+      size: 32
+  training:
+    cmd: python src/models/training.py
+    deps:
+    - path: data/processed_data
+      hash: md5
+      md5: 6251b89bce784cdb9ca16798111f123b.dir
+      size: 346803
+      nfiles: 4
+    - path: models/best_params.pkl
+      hash: md5
+      md5: 896de5b2b4454e8b3b84ec9ea75b1ede
+      size: 32
+    - path: src/models/training.py
+      hash: md5
+      md5: f2616f37dd17ff051e567a5b80d8d554
+      size: 464
+    outs:
+    - path: models/best_model.pkl
+      hash: md5
+      md5: d3e33b3edbe402c96307ae3b80d5c304
+      size: 1031
+  evaluation:
+    cmd: python src/models/evaluation.py
+    deps:
+    - path: data/processed_data
+      hash: md5
+      md5: 6251b89bce784cdb9ca16798111f123b.dir
+      size: 346803
+      nfiles: 4
+    - path: models/best_model.pkl
+      hash: md5
+      md5: d3e33b3edbe402c96307ae3b80d5c304
+      size: 1031
+    - path: src/models/evaluation.py
+      hash: md5
+      md5: c7ce981d7eaa67b8c8e78880d9c5a17e
+      size: 709
+    outs:
+    - path: metrics/scores.json
+      hash: md5
+      md5: a482e57ef9bfe2a1532f0f5cefa45010
+      size: 62

@@ -1,0 +1,39 @@
+stages:
+  preprocessing:
+    cmd: python src/data/preprocessing.py
+    deps:
+    - data/raw_data
+    - src/data/preprocessing.py
+    outs:
+    - data/processed_data
+  normalization:
+    cmd: python src/data/normalization.py
+    deps:
+    - data/processed_data
+    - src/data/normalization.py
+    outs:
+    - data/normalized_data
+  grid_search:
+    cmd: python src/models/grid_search.py
+    deps:
+    - data/processed_data
+    - src/models/grid_search.py
+    outs:
+    - models/best_params.pkl
+  training:
+    cmd: python src/models/training.py
+    deps:
+    - data/processed_data
+    - models/best_params.pkl
+    - src/models/training.py
+    outs:
+    - models/best_model.pkl
+  evaluation:
+    cmd: python src/models/evaluation.py
+    deps:
+    - data/processed_data
+    - models/best_model.pkl
+    - src/models/evaluation.py
+    metrics:
+    - metrics/scores.json:
+        cache: false

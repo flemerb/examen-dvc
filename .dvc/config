@@ -1,2 +1,4 @@
-['remote "origin"']
-    url = https://github.com/flemerb/examen-dvc.git
+[core]
+    remote = origin
+[remote "origin"]
+    url = https://dagshub.com/flemerb/examen-dvc.dvc
